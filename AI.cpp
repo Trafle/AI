@@ -194,6 +194,7 @@ Net::Net(const vector<unsigned> &topology) {
   }
 }
 
+//Change the main to load training data
 int main() {
 
   vector<unsigned> topology;
