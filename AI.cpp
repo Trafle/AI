@@ -1,26 +1,52 @@
 #include <vector>
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct Connection {
+  double weight;
+  double deltaWeight;
+};
 
 class Neuron;
+typedef vector<Neuron> Layer;
 
-typedef std::vector<Neuron> Layer;
+class Neuron {
+  public:
+    Neuron(unsigned numOutput);
+  private:
+    static double randomWeight(void) {return rand() / double(RAND_MAX);}
+    double m_outputVal;
+    vector<Connection> m_outputWeights;
+};
+
+Neuron::Neuron (unsigned numOutputs) {
+  for (unsigned c = 0; c < numOutputs; ++c) {
+    m_outputWeights.push_back(Connection());
+    m_outputWeights.back().weight = randomWeight();
+  };
+}
 
 class Net {
   public:
-    Net(const std::vector<unsigned> &topology);
-    void feedForward(const std::vector<double> &inputVals);
-    void backProp(const std::vector<double> &targetVals);
-    void getResults(std::vector<double> &resultVals) const;
+    Net(const vector<unsigned> &topology);
+    void feedForward(const vector<double> &inputVals) {};
+    void backProp(const vector<double> &targetVals) {};
+    void getResults(vector<double> &resultVals) const {};
 
   private:
-    std::vector<Layer> m_layers;
+    vector<Layer> m_layers;
 };
 
-Net::Net(const std::vector<unsigned> &topology) {
+Net::Net(const vector<unsigned> &topology) {
   unsigned numLayers = topology.size();
   for(unsigned layerNum = 0; layerNum < numLayers; ++layerNum) {
+    unsigned numOutputs = layerNum == topology.size() - 1 ? 0 : topology[layerNum + 1];
     m_layers.push_back(Layer());
     for (unsigned neuronNum = 0; neuronNum <= topology[layerNum]; ++neuronNum) {
-     m_layers.back().push_back(Neuron()); 
+      m_layers.back().push_back(Neuron(numOutputs)); 
+      cout << "Made a neuron!" << endl;
     }
 
   }
@@ -28,17 +54,18 @@ Net::Net(const std::vector<unsigned> &topology) {
 
 int main() {
 
-  std::vector<unsigned> topology;
+  vector<unsigned> topology;
+  topology.push_back(3);
+  topology.push_back(2);
+  topology.push_back(1);
   Net myNet(topology);
 
-  std::vector<double> inputVals;
-
-  std::vector<double> inputVals;
+  vector<double> inputVals;
   myNet.feedForward(inputVals);
 
-  std::vector<double> targetVals;
+  vector<double> targetVals;
   myNet.backProp(targetVals);
 
-  std::vector<double> resultVals;
+  vector<double> resultVals;
   myNet.getResults(resultVals);
 }
