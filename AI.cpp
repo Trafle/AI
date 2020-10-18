@@ -122,7 +122,7 @@ class Net {
 void Net::getResults(vector<double> &resultVals) const {
   resultVals.clear();
 
-  for(unsigned n = 0; n < n_layers.back().size - 1; ++n) {
+  for(unsigned n = 0; n < n_layers.back().size() - 1; ++n) {
     resultVals.push_back(n_layers.back()[n].getOutputVal());
   }
 }
@@ -190,7 +190,7 @@ Net::Net(const vector<unsigned> &topology) {
       n_layers.back().push_back(Neuron(numOutputs, neuronNum)); 
       cout << "Made a neuron!" << endl;
     }
-
+    n_layers.back().back().setOutputVal(1.0);
   }
 }
 
